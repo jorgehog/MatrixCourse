@@ -1,7 +1,9 @@
 
 #include "../matrixHeaders.h"
 
-void house(double & beta, colvec & v, colvec & x) {
+void house(double & beta, arma::colvec & v, arma::colvec & x) {
+    using namespace arma;
+    
     double sigma, mu;
 
     int n = x.n_rows;
