@@ -1,0 +1,139 @@
+cond: 0.0410342
+cond: 0.0895267
+cond: 0.103992
+cond: 0.107731
+cond: 0.109002
+cond: 0.10963
+cond: 0.110029
+cond: 0.110312
+cond: 0.110518
+cond: 0.110671
+cond: 0.110784
+cond: 0.110868
+cond: 0.110931
+cond: 0.110977
+cond: 0.111011
+cond: 0.111036
+cond: 0.111055
+cond: 0.111069
+cond: 0.11108
+cond: 0.111087
+cond: 0.111093
+cond: 0.111097
+cond: 0.1111
+cond: 0.111103
+cond: 0.111104
+cond: 0.111106
+cond: 0.111107
+Iterations completed after 0.00169611 seconds, with 27 iterations.
+Approximate eigenvalues with error 1e-06:
+   3.0380
+   1.0718
+  -0.9228
+   0.2820
+  -0.1311
+
+
+Eigenvalues by arma::eig_gen():
+   3.0380
+   1.0718
+  -0.9228
+   0.2820
+  -0.1311
+
+-----------------------
+cond: -0.000364739
+cond: 0.000504074
+cond: 0.00583757
+cond: 0.0152856
+cond: 0.0271635
+cond: 0.0399756
+cond: 0.052516
+cond: 0.0639638
+cond: 0.073886
+cond: 0.0821564
+cond: 0.0888502
+cond: 0.0941492
+cond: 0.0982747
+cond: 0.101447
+cond: 0.103863
+cond: 0.105691
+cond: 0.107067
+cond: 0.108098
+cond: 0.108869
+cond: 0.109444
+cond: 0.109872
+cond: 0.110191
+cond: 0.110428
+cond: 0.110604
+cond: 0.110734
+cond: 0.110831
+cond: 0.110903
+cond: 0.110956
+cond: 0.110996
+cond: 0.111025
+cond: 0.111047
+cond: 0.111063
+cond: 0.111075
+cond: 0.111084
+cond: 0.11109
+cond: 0.111095
+cond: 0.111099
+cond: 0.111102
+cond: 0.111104
+cond: 0.111105
+cond: 0.111106
+cond: 0.111107
+Iterations completed after 0.000620842 seconds, with 42 iterations.
+Approximate eigenvalues with error 1e-06:
+   3.0380
+   1.0718
+  -0.9228
+   0.2820
+  -0.1311
+
+
+Eigenvalues by arma::eig_gen():
+   3.0380
+   1.0718
+  -0.9228
+   0.2820
+  -0.1311
+
+-----------------------
+cond: 0.000147143
+cond: -0.000427492
+cond: 0.000181654
+cond: -7.94253e-05
+cond: 0.0197056
+cond: 0.0546551
+cond: 0.081958
+cond: 0.0974134
+cond: 0.104957
+cond: 0.108402
+cond: 0.109928
+cond: 0.110596
+cond: 0.110887
+cond: 0.111013
+cond: 0.111067
+cond: 0.111091
+cond: 0.111101
+cond: 0.111106
+cond: 0.111108
+cond: 0.111109
+Iterations completed after 0.000322104 seconds, with 20 iterations.
+Approximate eigenvalues with error 1e-06:
+   3.0380
+   1.0718
+  -0.9228
+   0.2820
+  -0.1311
+
+
+Eigenvalues by arma::eig_gen():
+   3.0380
+   1.0718
+  -0.9228
+   0.2820
+  -0.1311
+

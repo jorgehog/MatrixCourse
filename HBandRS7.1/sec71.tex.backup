@@ -1,0 +1,36 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+
+%opening
+\title{}
+\author{}
+
+\begin{document}
+
+\section*{Schur decomposition}
+matrix A can be expressed as similar transform of matrix U:
+
+$$A = QUQ^-1$$
+
+where U is upper triangular and is called the Schur form of A.
+Q is unitary, and U is upper diagonal, which means the eigenvalues of A will be on the diagonal of U. Find Schur decomp = expose eigenvalues. 
+
+\section*{Real analog of power method (7.3.1)}
+
+(7.4.1) is a real analog to the power method of finding eigenvalues. At a stage ($H_k=R_kU_k$), the machinery breaks down for matrices having complex eigenvalues. We must therefore calculate this term in a different way, namely by a \textit{real Schur decomposition}.
+
+\section*{Real Schur Decomposition}
+
+It is block upper diagonal. In the case of complex eigenvalues, the diagonal consists of 2x2 block matrices with complex conjugate eigenvalues. 
+
+\section*{Hessenberg QR step}
+
+The term $H_k=R_kU_k$ from the first section can now be calculated efficiently (order of magniute O(2) instead of O(3)) if we initialize the calculation with a matrix ($H_0$) on Hessenberg form (see next section).
+
+\section*{The Hessenberg reduction}
+
+It reads
+
+$$U_0^TAU_0 = H$$
+
+\end{document}

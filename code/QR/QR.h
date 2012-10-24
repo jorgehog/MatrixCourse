@@ -23,7 +23,7 @@ protected:
     arma::wall_clock timer;
 
     void dump_results();
-
+    
     virtual void get_initial_condition(arma::mat & A) {
 
     }
@@ -32,9 +32,16 @@ protected:
 
 public:
     QR(arma::mat & A, double eps = 1E-6, int max_iter = 1000);
+    QR();
 
-    void iterate();
-
+    void iterate(bool dump = true);
+    double get_runtime() {
+        return runtime;
+    }
+    
+    int get_iters() {
+        return iterations;
+    }
 };
 
 #endif	/* QR_H */

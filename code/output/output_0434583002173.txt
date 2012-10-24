@@ -1,0 +1,126 @@
+cond: -0.000145352
+cond: 0.00354136
+cond: 0.00544418
+cond: 0.00660999
+cond: 0.00746102
+cond: 0.00809275
+cond: 0.00855292
+cond: 0.00888173
+cond: 0.00911336
+cond: 0.00927492
+cond: 0.00938684
+cond: 0.00946401
+cond: 0.00951706
+cond: 0.00955344
+cond: 0.00957836
+cond: 0.00959541
+cond: 0.00960707
+cond: 0.00961503
+cond: 0.00962047
+cond: 0.00962419
+cond: 0.00962673
+cond: 0.00962846
+cond: 0.00962965
+cond: 0.00963045
+Iterations completed after 0.00169015 seconds, with 24 iterations.
+Approximate eigenvalues with error 1e-06:
+   2.3549
+  -0.8823
+  -0.4608
+   0.3807
+   0.0264
+
+
+Eigenvalues by arma::eig_gen():
+   2.3549
+  -0.8823
+  -0.4609
+   0.3808
+   0.0264
+
+-----------------------
+cond: 1.51953e-05
+cond: 0.00120351
+cond: 0.000493349
+cond: -4.82167e-05
+cond: 6.34874e-05
+cond: 0.000823804
+cond: 0.00203947
+cond: 0.00344863
+cond: 0.00482443
+cond: 0.00602681
+cond: 0.00700095
+cond: 0.00774965
+cond: 0.00830435
+cond: 0.00870496
+cond: 0.00898924
+cond: 0.00918853
+cond: 0.00932708
+cond: 0.00942284
+cond: 0.00948878
+cond: 0.00953405
+cond: 0.00956509
+cond: 0.00958633
+cond: 0.00960086
+cond: 0.00961079
+cond: 0.00961758
+cond: 0.00962221
+cond: 0.00962538
+cond: 0.00962754
+cond: 0.00962902
+cond: 0.00963002
+cond: 0.00963071
+Iterations completed after 0.000468969 seconds, with 31 iterations.
+Approximate eigenvalues with error 1e-06:
+   2.3549
+  -0.8823
+  -0.4608
+   0.3807
+   0.0264
+
+
+Eigenvalues by arma::eig_gen():
+   2.3549
+  -0.8823
+  -0.4609
+   0.3808
+   0.0264
+
+-----------------------
+cond: 0.000274948
+cond: 0.00244119
+cond: 0.000917527
+cond: -8.3931e-05
+cond: 0.00071336
+cond: 0.00281976
+cond: 0.00511708
+cond: 0.00691131
+cond: 0.00808475
+cond: 0.0087808
+cond: 0.00917225
+cond: 0.00938617
+cond: 0.00950129
+cond: 0.00956274
+cond: 0.0095954
+cond: 0.00961272
+cond: 0.00962189
+cond: 0.00962674
+cond: 0.00962931
+cond: 0.00963067
+cond: 0.00963139
+Iterations completed after 0.000341892 seconds, with 21 iterations.
+Approximate eigenvalues with error 1e-06:
+   2.3549
+  -0.8823
+  -0.4608
+   0.3808
+   0.0264
+
+
+Eigenvalues by arma::eig_gen():
+   2.3549
+  -0.8823
+  -0.4609
+   0.3808
+   0.0264
+

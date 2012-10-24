@@ -1,0 +1,50 @@
+Iterations completed after 0.00138617 seconds, with 19 iterations.
+Approximate eigenvalues with error 1e-06:
+   3.0884
+   0.9750
+  -0.6724
+  -0.5232
+   0.1754
+
+
+Eigenvalues by arma::eig_gen():
+   3.0884
+   0.9750
+   0.1754
+  -0.6724
+  -0.5232
+
+-----------------------
+Iterations completed after 0.000244856 seconds, with 24 iterations.
+Approximate eigenvalues with error 1e-06:
+   3.0884
+   0.9750
+  -0.6724
+  -0.5232
+   0.1754
+
+
+Eigenvalues by arma::eig_gen():
+   3.0884
+   0.9750
+   0.1754
+  -0.6724
+  -0.5232
+
+-----------------------
+Iterations completed after 0.000134945 seconds, with 12 iterations.
+Approximate eigenvalues with error 1e-06:
+   3.0884
+   0.9750
+   0.1754
+  -0.6724
+  -0.5232
+
+
+Eigenvalues by arma::eig_gen():
+   3.0884
+   0.9750
+   0.1754
+  -0.6724
+  -0.5232
+

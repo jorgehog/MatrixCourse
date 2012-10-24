@@ -1,0 +1,193 @@
+cond: 0.0249802
+cond: 0.0676421
+cond: 0.093452
+cond: 0.11418
+cond: 0.132678
+cond: 0.149802
+cond: 0.16565
+cond: 0.180121
+cond: 0.193151
+cond: 0.204746
+cond: 0.21496
+cond: 0.223885
+cond: 0.23163
+cond: 0.238311
+cond: 0.244047
+cond: 0.248951
+cond: 0.253129
+cond: 0.256678
+cond: 0.259686
+cond: 0.26223
+cond: 0.264378
+cond: 0.266189
+cond: 0.267714
+cond: 0.268997
+cond: 0.270075
+cond: 0.27098
+cond: 0.27174
+cond: 0.272378
+cond: 0.272913
+cond: 0.273361
+cond: 0.273737
+cond: 0.274051
+cond: 0.274315
+cond: 0.274536
+cond: 0.274721
+cond: 0.274876
+cond: 0.275005
+cond: 0.275114
+cond: 0.275205
+cond: 0.275281
+cond: 0.275345
+cond: 0.275398
+cond: 0.275443
+cond: 0.27548
+cond: 0.275511
+cond: 0.275537
+cond: 0.275559
+cond: 0.275577
+cond: 0.275593
+cond: 0.275606
+cond: 0.275616
+cond: 0.275625
+cond: 0.275633
+cond: 0.275639
+cond: 0.275644
+cond: 0.275649
+cond: 0.275653
+cond: 0.275656
+cond: 0.275658
+cond: 0.27566
+cond: 0.275662
+cond: 0.275664
+cond: 0.275665
+cond: 0.275666
+cond: 0.275667
+Iterations completed after 0.00216079 seconds, with 65 iterations.
+Approximate eigenvalues with error 1e-06:
+   3.0308
+  -0.9366
+   0.8568
+   0.4162
+  -0.2723
+
+
+Eigenvalues by arma::eig_gen():
+   3.0308
+  -0.9367
+  -0.2723
+   0.4162
+   0.8568
+
+-----------------------
+cond: -0.00201732
+cond: -0.0660396
+cond: 0.0729167
+cond: 0.176733
+cond: 0.225967
+cond: 0.25082
+cond: 0.262943
+cond: 0.268703
+cond: 0.271469
+cond: 0.272864
+cond: 0.273628
+cond: 0.274093
+cond: 0.274407
+cond: 0.274637
+cond: 0.274816
+cond: 0.27496
+cond: 0.275078
+cond: 0.275175
+cond: 0.275257
+cond: 0.275324
+cond: 0.275381
+cond: 0.275428
+cond: 0.275468
+cond: 0.275501
+cond: 0.275529
+cond: 0.275552
+cond: 0.275572
+cond: 0.275588
+cond: 0.275602
+cond: 0.275613
+cond: 0.275623
+cond: 0.275631
+cond: 0.275637
+cond: 0.275643
+cond: 0.275647
+cond: 0.275651
+cond: 0.275655
+cond: 0.275657
+cond: 0.27566
+cond: 0.275662
+cond: 0.275663
+cond: 0.275665
+cond: 0.275666
+cond: 0.275667
+Iterations completed after 0.000654936 seconds, with 44 iterations.
+Approximate eigenvalues with error 1e-06:
+   3.0308
+  -0.9366
+   0.8568
+   0.4162
+  -0.2723
+
+
+Eigenvalues by arma::eig_gen():
+   3.0308
+  -0.9367
+  -0.2723
+   0.4162
+   0.8568
+
+-----------------------
+cond: -0.0811446
+cond: -0.0188755
+cond: 0.0848804
+cond: 0.145027
+cond: 0.182974
+cond: 0.209738
+cond: 0.22918
+cond: 0.243206
+cond: 0.253178
+cond: 0.260176
+cond: 0.265039
+cond: 0.268396
+cond: 0.270702
+cond: 0.272281
+cond: 0.27336
+cond: 0.274097
+cond: 0.274599
+cond: 0.274941
+cond: 0.275174
+cond: 0.275333
+cond: 0.275441
+cond: 0.275515
+cond: 0.275565
+cond: 0.275599
+cond: 0.275622
+cond: 0.275638
+cond: 0.275649
+cond: 0.275656
+cond: 0.275661
+cond: 0.275664
+cond: 0.275667
+cond: 0.275668
+cond: 0.275669
+cond: 0.27567
+Iterations completed after 0.000543118 seconds, with 34 iterations.
+Approximate eigenvalues with error 1e-06:
+   3.0308
+  -0.9366
+  -0.2723
+   0.4162
+   0.8568
+
+
+Eigenvalues by arma::eig_gen():
+   3.0308
+  -0.9367
+  -0.2723
+   0.4162
+   0.8568
+

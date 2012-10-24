@@ -11,6 +11,7 @@
 #include <armadillo>
 #include <iostream>
 #include <math.h>
+#include <time.h>
 
 /*
  

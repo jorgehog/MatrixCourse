@@ -15,6 +15,10 @@ QR::QR(arma::mat & A, double eps, int max_iter) {
     A_orig = A;
 }
 
+QR::QR() {
+
+}
+
 void QR::get_RQ() {
     arma::mat R, Q;
 
@@ -23,29 +27,36 @@ void QR::get_RQ() {
     A = R*Q;
 }
 
-void QR::iterate() {
-
-    get_initial_condition(A);
+void QR::iterate(bool dump) {
 
     double cond = eps + 1;
     double cond_prev = 0;
 
 
     iterations = 0;
+
     timer.tic();
+    get_initial_condition(A);
 
     while ((fabs(cond - cond_prev) > eps) && (iterations < max_iter)) {
         get_RQ();
 
-        
+
         cond_prev = cond;
         cond = arma::prod(A.diag());
-        
+
+        if (dump) {
+            std::cout << "cond: " << cond << std::endl;
+        }
+
         iterations++;
     }
 
     runtime = timer.toc();
-    dump_results();
+
+    if (dump) {
+        dump_results();
+    }
 }
 
 void QR::dump_results() {
@@ -62,8 +73,8 @@ void QR::dump_results() {
         cout << "Iterations aborted after " << runtime << " seconds, with " << iterations << " iterations." << endl;
         cout << "Approximate eigenvalues:" << endl;
     }
-    
-    
+
+
     cout << A.diag() << endl;
 
     cout << "\nEigenvalues by arma::eig_gen():" << endl;
