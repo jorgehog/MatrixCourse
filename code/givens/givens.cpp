@@ -3,6 +3,7 @@
 
 void givens(double a, double b, arma::mat & G) {
     double tau, c, s;
+    using namespace std;
 
     if (b == 0) {
         c = 1;
@@ -24,5 +25,4 @@ void givens(double a, double b, arma::mat & G) {
     G(1, 1) = c;
     G(0, 1) = s;
     G(1, 0) = -s;
-
 }

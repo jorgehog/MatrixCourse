@@ -1,17 +1,17 @@
 
 #include "../matrixHeaders.h"
 
-void house(double & beta, arma::colvec & v, arma::colvec & x) {
+void house(arma::mat & ImBvvT, arma::colvec & x) {
     using namespace arma;
     
-    double sigma, mu;
+    double sigma, mu, beta;
 
     int n = x.n_rows;
 
     colvec xspan = x(span(1, n - 1));
     sigma = dot(xspan, xspan);
 
-    v = zeros<colvec > (n);
+    colvec v = zeros<colvec > (n);
     v(span(1, n - 1)) = xspan;
 
     //zero if sigma is zero
@@ -29,4 +29,6 @@ void house(double & beta, arma::colvec & v, arma::colvec & x) {
         beta = 2 / (sigma / (v(0) * v(0)) + 1);
         v /= v(0);
     }
+    
+    ImBvvT = eye<mat > (n, n) - beta * v * strans(v);
 }
