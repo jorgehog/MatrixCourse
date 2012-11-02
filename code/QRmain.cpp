@@ -17,81 +17,16 @@ int main(int argc, char** argv) {
 
     unsigned long seed = time(NULL);
     srand(seed);
-    argc = 1;
+//    argc = 1;
 
 
-    /////
-    //    mat A;
-    //    mat subA;
-    //    int n = 6;
-    //    A = randu<mat > (n, n);
-    //
-    //    cx_vec eigval;
-    //    cx_mat eigvec;
-    //
-    //    eig_gen(eigval, eigvec, A);
-    //    cout << eigval << endl;
-    //
-    //    double tol = 1E-6;
-    //    householderRedHessenberg(A);
-    //
-    //    int p, q, l;
-    //
-    //    bool not_on_real_schur_form;
-    //    colvec subdiag;
-    //            
-    //    while (true) {
-    //        p = (int) ((A(1, 0) != 0)&(A(2, 1) == 0));
-    //        q = (n - 1) - (int) ((A(n - 1, n - 2) != 0)&(A(n - 2, n - 3) == 0));
-    ////        l = n - 1;
-    //
-    //        //deflation;
-    //        for (int i = 0; i < n; i++) {
-    //            for (int j = i + 1; j < n; j++) {
-    //                if (fabs(A(j, i)) < tol) A(j, i) = 0;
-    //            }
-    //        }
-    //
-    //
-    //        while ((A(q, q - 1) == 0)) {
-    //            q--;
-    //        }
-    //
-    //        while ((A(p + 1, p) == 0) && (p != q)) {
-    //            p++;
-    //        }
-    //
-    //        //        while (l > 2) {
-    //        //            if (A(l - 1, l - 2)*(A(l - 2, l - 3)) != 0) {
-    //        //                stop = false;
-    //        //            }
-    //        //            l--;
-    //        //        }
-    //
-    //        subdiag = A.diag(-1);
-    //        not_on_real_schur_form = (bool)(dot(subdiag(span(1, n - 2)), subdiag(span(0, n - 3))));
-    //        if (!not_on_real_schur_form) {
-    //            break;
-    //        }
-    //
-    //
-    //        subA = A(span(p, q), span(p, q));
-    //        FrancisQRstep(subA);
-    //        A(span(p, q), span(p, q)) = subA;
-    //
-    //
-    //
-    //    }
-    //
-    //    cout << A << endl;
-    /////
-
-    if (argc == 1) {
+    if (argc == 2) {
+        int N = atoi(argv[1]);
         mat A;
         //        A << 1 << 3 << -3 << endr
         //                << -3 << 7 << -3 << endr
         //                << -6 << 6 << -2 << endr;
-        A = randu<mat > (5, 5);
+        A = randu<mat > (N, N);
 
         cout << "-----------QR----------" << endl;
 

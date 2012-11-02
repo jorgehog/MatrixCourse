@@ -53,7 +53,7 @@ void QR::iterate(bool dump) {
         //calculate the condition
         subdiag = A.diag(-1);
         cond = dot(subdiag(span(1, n - 2)), subdiag(span(0, n - 3)));
-//        if (dump) cout << "cond: " << cond << endl;
+        if (dump) cout << "cond: " << cond << endl;
 
         //if cond == 0, we have a real schur form
         not_on_real_schur_form = (bool)(cond);
