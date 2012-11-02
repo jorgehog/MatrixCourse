@@ -19,7 +19,7 @@ private:
     
     virtual void get_initial_condition(arma::mat & A);
 
-    virtual void get_RQ();
+    virtual void get_RQ(arma::mat & A);
 };
 
 #endif	/* SHIFTEDQR_H */

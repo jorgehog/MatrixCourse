@@ -12,7 +12,7 @@ HessenbergQR::HessenbergQR(arma::mat& A, double eps, int max_iter)
 
 }
 
-void HessenbergQR::get_RQ(){
+void HessenbergQR::get_RQ(arma::mat & A){
     hessenbergQRStep(A);
 }
 

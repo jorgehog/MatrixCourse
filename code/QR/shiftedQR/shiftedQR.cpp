@@ -19,7 +19,7 @@ void shiftedQR::get_initial_condition(arma::mat& A) {
     householderRedHessenberg(A);
 }
 
-void shiftedQR::get_RQ() {
+void shiftedQR::get_RQ(arma::mat & A) {
 
     //mu*I
     muI = A(n - 1, n - 1)*I;

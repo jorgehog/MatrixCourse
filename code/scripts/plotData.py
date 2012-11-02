@@ -17,10 +17,11 @@ inFile.close()
 
 methods = ["QR", "HessenbergQR", "shiftedQR"]
 
-timeP = "Iterations completed after\s*(\d+\.?\d*)\s*seconds"
+timeP = "Iterations completed after\s*(\d+\.?\d*e?-?\d*)\s*seconds"
 times = [float(x) for x in re.findall(timeP, infile)]
 
-iterP = "Iterations completed after\s*\d+\.?\d*\s*seconds, with\s*(\d+)\s*iterations."
+iterP = "Iterations completed after\s*\d+\.?\d*e?-?\d*\s*seconds, with\s*(\d+)\s*iterations."
+#print re.findall(iterP, infile)
 iters = [int(x) for x in re.findall(iterP, infile)]
 
 errorP = "Approximate eigenvalues with error (\d+e-\d+)"
@@ -80,6 +81,7 @@ figure(1)
 plot(linspace(1, n, n), armaEig, "k^", hold="on", legend="arma::eig_gen()")
 
 for i in range(len(methods)):
+#    print i, len(eigvals), len(plotStyles), len(iters), len(methods)
     eigvals[i].sort()
     figure(1)
     plot(linspace(1, n, n), eigvals[i], plotStyles[i], hold="on", legend="%s (%d)" % (methods[i], iters[i]) , title="Plot of eigenvalues. Error=" + str(errors[0]), xlabel="#", ylabel="eigenvalue", hardcopy="../output/" + tag + "EIGVALS.png")

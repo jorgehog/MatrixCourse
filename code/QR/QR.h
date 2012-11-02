@@ -21,14 +21,19 @@ protected:
     arma::mat A;
     arma::mat A_orig;
     arma::wall_clock timer;
+    arma::mat eigvals;
 
     void dump_results();
+    
+    void deflate(arma::mat & A);
     
     virtual void get_initial_condition(arma::mat & A) {
 
     }
 
-    virtual void get_RQ();
+    void get_eigvals_from_realschur(arma::mat & A);
+    
+    virtual void get_RQ(arma::mat & A);
 
 public:
     QR(arma::mat & A, double eps = 1E-6, int max_iter = 1000);

@@ -8,6 +8,8 @@
 #ifndef MATRIXHEADERS_H
 #define	MATRIXHEADERS_H
 
+//#define ARMA_NO_DEBUG
+
 #include <armadillo>
 #include <iostream>
 #include <math.h>
@@ -31,10 +33,13 @@ void householderRedHessenberg(arma::mat & A);
 //Overwrites H with H+ = RQ by algorthm 7.4.1
 void hessenbergQRStep(arma::mat & H);
 
+//Overwrites H with Z^T H Z by algorithm 7.5.1
+void FrancisQRstep(arma::mat & H);
 
 #include "QR/QR.h"
 #include "QR/HessenbergQR/HessenbergQR.h"
 #include "QR/shiftedQR/shiftedQR.h"
+#include "QR/FrancisQR/FrancisQR.h"
 
 
 #endif	/* MATRIXHEADERS_H */

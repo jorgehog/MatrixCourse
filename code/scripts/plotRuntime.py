@@ -2,7 +2,7 @@
 
 from scitools.std import array, plot
 
-infile = open("../output/TEST2.txt", 'r')
+infile = open("../output/TEST3.txt", 'r')
 
 n = []
 t = [[],[],[]]
@@ -18,9 +18,9 @@ for line in infile:
         i[j].append(int(tmp[3]))
         
 
-t0 = array(t[0])#/array(i[0])
-t1 = array(t[1])#/array(i[1])
-t2 = array(t[2])#/array(i[2])
+t0 = array(t[0])/array(i[0])
+t1 = array(t[1])/array(i[1])
+t2 = array(t[2])/array(i[2])
 
 T = array([t0, t1, t2])
 styles = ["k--","k:","k-."]
