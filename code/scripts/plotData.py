@@ -1,33 +1,59 @@
 # -*- coding: utf-8 -*-
 
-from scitools.std import random, plot, figure, linspace, zeros, array
+from scitools.std import *
 import os, re
 
-n = 6;
+n =10;
+eps=0.00001
+nm = 1000
 
 programPath = os.path.expanduser("~") + "/NetBeansProjects/matrixCourse/dist/Debug/GNU-Linux-x86"
 programName = "matrixcourse"
 tag = str(random.random())[2:]
 outname = "output_" + tag + ".txt"
 
-os.system("%s/%s %d > ../output/%s" % (programPath, programName, n, outname))
+print "TAG: ", tag, "\n"
+
+os.system("%s/%s %d %g %d > ../output/%s" % (programPath, programName, n,eps, nm, outname))
 
 inFile = open("../output/" + outname, 'r')
 infile = inFile.read()
 inFile.close()
 
-
 methods = ["QR", "HessenbergQR", "shiftedQR", "Francis"]
 
-timeP = "Iterations completed after\s*(\d+\.?\d*e?-?\d*)\s*seconds"
-times = [float(x) for x in re.findall(timeP, infile)]
+timeP = "Iterations completed after\s*(\d+\.?\d*e?-?\d*)\s*seconds|Iterations aborted after\s*(\d+\.?\d*e?-?\d*)\s*seconds, with\s*\d+\s*iterations."
 
-iterP = "Iterations completed after\s*\d+\.?\d*e?-?\d*\s*seconds, with\s*(\d+)\s*iterations."
-iters = [int(x) for x in re.findall(iterP, infile)]
+times = []
+for t in re.findall(timeP, infile):
+    if t[0]:
+        times.append(float(t[0]))
+    elif t[1]:
+        times.append(float(t[1]))
+    else:
+        print "error"
+        times.append(0)
+
+iterP = "Iterations completed after\s*\d+\.?\d*e?-?\d*\s*seconds, with\s*(\d+)\s*iterations.|Iterations (aborted) after\s*\d+\.?\d*e?-?\d*\s*seconds, with\s*\d+\s*iterations."
+
+itersRaw = re.findall(iterP, infile)
+iters = []
+c = 0
+for it in itersRaw:
+    if it[0]:
+        iters.append(it[0])
+    elif it[1] == 'aborted':
+        iters.append('N/A')
+        c+=1
+    else:
+        print "error"
+        iters.append('0')
+
 
 errorP = "Approximate eigenvalues with error (\d+e-\d+)"
 errors = [float(x) for x in re.findall(errorP, infile)]
-
+if c == len(methods):
+    errors = [0]
 eigvals = zeros([len(methods), n, 2])
 cond = []
 armaEig = zeros([n, 2])
@@ -52,32 +78,78 @@ for c in cond:
     if (len(c)) > maxL:
         maxL = len(c)
 
-COND = zeros([maxL, len(methods)])
+doCond = True
+        
+if doCond:
+    COND = zeros([maxL, len(methods)])
+    CONDSTOP = zeros([len(methods)])
+    for i in range(len(methods)):
+        CONDSTOP[i] = len(cond[i])
+        COND[0:len(cond[i]), i] = cond[i]
+        COND[len(cond[i]):, i] = cond[i][-1]
+
+condPlotStyles=["b","r","g", "c"]    
+plotStyles=["+", ".", "x", "^"]
+
+#Sorting
+armaEig.sort(axis=0)
+for subset in eigvals:
+    subset.sort(axis=0)
+
+
+titleEig = "Plot of eigenvalues (z). Error=%g. Red=Re(z), Blue=Im(z)" % errors[0]
+hcEig = "../output/" + tag + "EIGVALS.png"
+
+minEig = eigvals.min()*(1.1*(eigvals.min() < 0) + 0.9*(eigvals.min() > 0))
+maxEig = eigvals.max()*(1.1*(eigvals.max() > 0) + 0.9*(eigvals.max() < 0))
+axisEig = [0, n+1,  minEig, maxEig]
+
 for i in range(len(methods)):
-    COND[0:len(cond[i]), i] = cond[i]
-    COND[len(cond[i]):, i] = cond[i][-1]
+    figure(1)
+    
+    #imaginary part
+    plot(linspace(1,n,n), eigvals[i][:,0], 
+         "b" + plotStyles[i], 
+         hold="on")
+         
+    #figure(3)
+    #real part
+    plot(linspace(1,n,n), eigvals[i][:,1], "r" + plotStyles[i], 
+         hold="on", 
+         legend="%s (%s)" % (methods[i], iters[i]))
+    
+    if doCond:
+        figure(2)
 
-
-
-condPlotStyles=["k--","k:","k-.", "k-*"]    
-plotStyles=["k+", "k.", "kx", "k*"]
-
-
-armaEig.sort()
+        accu = add.accumulate(COND[:, i])/add.accumulate(ones(COND[:, i].shape))
+        plot(accu, 
+             condPlotStyles[i],
+             hold="on", 
+             legend="%s (%.2E s)" % (methods[i], times[i]))
+        
+        figure(5)
+        
+        plot(COND[:, i], condPlotStyles[i], hold="on", 
+             title="Convergance plot lower values", 
+             legend="%s (%.2E s)" % (methods[i], times[i]),
+             xlabel="iteration", ylabel="Condition", 
+             hardcopy="../output/" + tag + "CONVERGANCE0.png")
 
 figure(1)
-plot(linspace(1, n, n), armaEig[:,0], "k^", hold="on")
-plot(linspace(1, n, n), armaEig[:,1], "k^", hold="on", legend="arma::eig_gen()")
-
-for i in range(len(methods)):
-#    print i, len(eigvals), len(plotStyles), len(iters), len(methods)
-    eigvals[i].sort()
-    figure(1)
-    plot(linspace(1, n, n), eigvals[i][:,0], plotStyles[i], hold="on")
-    plot(linspace(1, n, n), eigvals[i][:,1], plotStyles[i], hold="on", legend="%s (%d)" % (methods[i], iters[i]) , title="Plot of eigenvalues. Error=" + str(errors[0]), xlabel="#", ylabel="eigenvalue", hardcopy="../output/" + tag + "EIGVALS.png")
-    
-    figure(2)
-    plot(COND[:, i], condPlotStyles[i],hold="on", legend="%s (%.2E s)" % (methods[i], times[i]), title="Convergance plot.", xlabel="iteration", ylabel="prod(diag(A))", hardcopy="../output/" + tag + "CONVERGANCE.png")
-    
+plot(linspace(1,n,n), armaEig[:,0], "bo", hold="on")
+#figure(3)
+plot(linspace(1,n,n), armaEig[:,1], "ro", hold="on", 
+     legend="arma::eig_gen()",
+     axis=axisEig,
+     title=titleEig, 
+     xlabel="#", ylabel="Re(z) or Im(z)", 
+     hardcopy=hcEig)       
+        
+figure(2)
+plot(CONDSTOP, zeros(len(methods)), "ks",
+     title="Convergance plot lower values (trailing averages)", 
+     legend="Point of convergance",
+     xlabel="iteration", ylabel="Average condition", 
+     hardcopy="../output/" + tag + "CONVERGANCE1.png")
 
 raw_input()

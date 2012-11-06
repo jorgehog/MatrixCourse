@@ -29,8 +29,8 @@ void QR::get_RQ(arma::mat & A) {
 
 void QR::deflate(arma::mat& A) {
     for (int i = 0; i < n; i++) {
-        for (int j = i + 1; j < n; j++) {
-            if (fabs(A(j, i)) < eps) A(j, i) = 0;
+        for (int j = i - 1; j >= 0; j--) {
+            if (fabs(A(i, j)) < eps) A(i, j) = 0;
         }
     }
 }
@@ -38,10 +38,7 @@ void QR::deflate(arma::mat& A) {
 void QR::iterate(bool dump) {
     using namespace arma;
 
-    double cond;
-    colvec subdiag;
     bool not_on_real_schur_form;
-
 
     iterations = 0;
     timer.tic();
@@ -50,13 +47,8 @@ void QR::iterate(bool dump) {
 
         deflate(A);
 
-        //calculate the condition
-        subdiag = A.diag(-1);
-        cond = dot(subdiag(span(1, n - 2)), subdiag(span(0, n - 3)));
-        if (dump) cout << "cond: " << cond << endl;
-
-        //if cond == 0, we have a real schur form
-        not_on_real_schur_form = (bool)(cond);
+        //if check is false, we have a real schur form
+        not_on_real_schur_form = check_cond(A, dump);
         if (!not_on_real_schur_form) {
             break;
         }
@@ -74,6 +66,29 @@ void QR::iterate(bool dump) {
     }
 }
 
+bool QR::check_cond(arma::mat & A, bool dump) {
+    using namespace arma;
+
+    double cond, fnormSD;
+
+    subdiag = A.diag(-1);
+    cond = sqrt(fabs(dot(subdiag(span(1, n - 2)), subdiag(span(0, n - 3)))));
+
+    fnormSD = 0;
+    for (int i = 2; i < n; i++) {
+        for (int j = i - 2; j >= 0; j--) {
+            fnormSD += A(i, j) * A(i, j);
+        }
+    }
+
+    cond += sqrt(fnormSD);
+
+    if (dump) cout << "cond: " << cond << endl;
+
+    return (bool)cond;
+
+}
+
 void QR::dump_results() {
     using namespace std;
     using namespace arma;
@@ -85,6 +100,7 @@ void QR::dump_results() {
         cout << "Iterations completed after " << runtime << " seconds, with " << iterations << " iterations." << endl;
         cout << "Approximate eigenvalues with error " << eps << ":" << endl;
     } else {
+
         cout << "Iterations aborted after " << runtime << " seconds, with " << iterations << " iterations." << endl;
         cout << "Approximate eigenvalues:" << endl;
     }
@@ -122,7 +138,7 @@ void QR::get_eigvals_from_realschur(arma::mat& A) {
             re = 0.5 * (block(0, 0) + block(1, 1));
 
             det = block(0, 0) * block(1, 1) - block(0, 1) * block(1, 0);
-         
+
             //check for complex eigenvalues
             if (re * re > det) {
                 re2 = sqrt(re * re - det);

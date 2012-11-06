@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang=”en”>
+
+<head>
+<meta charset=”utf-8″>
+
+<title>Title</title>
+
+<div id=”reveal”>
+<div>  
+<section>
+<section>
+  <section>
+<section>
+<h2>Fragmented Views</h2>
+<p>Hit the next arrow</p>
+<p>to step through</p>
+<ol>
+<li><code>any type</code></li>
+<li><em>of view</em></li>
+<li><strong>fragments</strong></li>
+</ol>
+</section>
+
+<aside>
+<a href=”#”>&#x25C4;</a>
+<a href=”#”>&#x25BA;</a>
+<a href=”#”>&#x25B2;</a>
+<a href=”#”>&#x25BC;</a>
+</aside>
+
+<div><span></span></div>
+
+<script src=”/home/jorgmeister/Programs/reveal.js/js/reveal.js”></script>
+
+<script>
+// Parse the query string into a key/value object
+var query = {};
+location.search.replace( /[A-Z0-9]+?=(\w*)/gi, function(a) {
+query[ a.split( '=' ).shift() ] = a.split( ‘=’ ).pop();
+} );
+
+Reveal.initialize({
+// Display controls in the bottom right corner
+controls: true,
+
+// Display a presentation progress bar
+progress: true,
+
+// Apply a 3D roll to links on hover
+rollingLinks: true,
+
+// UI style
+theme: query.theme || ‘default’, // default/neon
+
+// Transition style
+transition: query.transition || ‘default’ // default/cube/page/concave/linear(2d),
+});
+</script>

@@ -8,7 +8,7 @@
 #ifndef MATRIXHEADERS_H
 #define	MATRIXHEADERS_H
 
-//#define ARMA_NO_DEBUG
+#define ARMA_NO_DEBUG
 
 #include <armadillo>
 #include <iostream>
