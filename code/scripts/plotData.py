@@ -3,9 +3,9 @@
 from scitools.std import *
 import os, re
 
-n =10;
-eps=0.00001
-nm = 1000
+n =20;
+eps=0.001
+nm = n*100
 
 programPath = os.path.expanduser("~") + "/NetBeansProjects/matrixCourse/dist/Debug/GNU-Linux-x86"
 programName = "matrixcourse"
@@ -50,10 +50,11 @@ for it in itersRaw:
         iters.append('0')
 
 
-errorP = "Approximate eigenvalues with error (\d+e-\d+)"
+errorP = "Approximate eigenvalues with error (\d+\.?\d*e?-?\d*)"
 errors = [float(x) for x in re.findall(errorP, infile)]
 if c == len(methods):
     errors = [0]
+
 eigvals = zeros([len(methods), n, 2])
 cond = []
 armaEig = zeros([n, 2])
@@ -88,8 +89,8 @@ if doCond:
         COND[0:len(cond[i]), i] = cond[i]
         COND[len(cond[i]):, i] = cond[i][-1]
 
-condPlotStyles=["b","r","g", "c"]    
-plotStyles=["+", ".", "x", "^"]
+plotStyles=["b","r","g", "c"]    
+eigPlotStyle = "x"
 
 #Sorting
 armaEig.sort(axis=0)
@@ -97,24 +98,18 @@ for subset in eigvals:
     subset.sort(axis=0)
 
 
-titleEig = "Plot of eigenvalues (z). Error=%g. Red=Re(z), Blue=Im(z)" % errors[0]
+titleEig = "Plot of eigenvalues z. Error=%g." % errors[0]
 hcEig = "../output/" + tag + "EIGVALS.png"
 
-minEig = eigvals.min()*(1.1*(eigvals.min() < 0) + 0.9*(eigvals.min() > 0))
-maxEig = eigvals.max()*(1.1*(eigvals.max() > 0) + 0.9*(eigvals.max() < 0))
-axisEig = [0, n+1,  minEig, maxEig]
+#min_x = eigvals[:][:,0].min()*(1.1*(eigvals[:][:,0].min() < 0) + 0.9*(eigvals[:][:,0].min() > 0))
+#maxEig = eigvals.max()*(1.1*(eigvals.max() > 0) + 0.9*(eigvals.max() < 0))
+#axisEig = [0, n+1,  minEig, maxEig]
 
 for i in range(len(methods)):
     figure(1)
     
-    #imaginary part
-    plot(linspace(1,n,n), eigvals[i][:,0], 
-         "b" + plotStyles[i], 
-         hold="on")
-         
-    #figure(3)
-    #real part
-    plot(linspace(1,n,n), eigvals[i][:,1], "r" + plotStyles[i], 
+    plot(eigvals[i][:,0],eigvals[i][:,1], 
+         plotStyles[i] + eigPlotStyle, 
          hold="on", 
          legend="%s (%s)" % (methods[i], iters[i]))
     
@@ -123,26 +118,24 @@ for i in range(len(methods)):
 
         accu = add.accumulate(COND[:, i])/add.accumulate(ones(COND[:, i].shape))
         plot(accu, 
-             condPlotStyles[i],
+             plotStyles[i],
              hold="on", 
              legend="%s (%.2E s)" % (methods[i], times[i]))
         
         figure(5)
         
-        plot(COND[:, i], condPlotStyles[i], hold="on", 
+        plot(COND[:, i], plotStyles[i], hold="on", 
              title="Convergance plot lower values", 
              legend="%s (%.2E s)" % (methods[i], times[i]),
              xlabel="iteration", ylabel="Condition", 
              hardcopy="../output/" + tag + "CONVERGANCE0.png")
 
 figure(1)
-plot(linspace(1,n,n), armaEig[:,0], "bo", hold="on")
-#figure(3)
-plot(linspace(1,n,n), armaEig[:,1], "ro", hold="on", 
+plot(armaEig[:,0], armaEig[:,1], "r*", hold="on", 
      legend="arma::eig_gen()",
-     axis=axisEig,
+#     axis=axisEig,
      title=titleEig, 
-     xlabel="#", ylabel="Re(z) or Im(z)", 
+     xlabel="Re(z)", ylabel="Im(z)", 
      hardcopy=hcEig)       
         
 figure(2)

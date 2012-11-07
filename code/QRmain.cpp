@@ -15,7 +15,7 @@ int main(int argc, char** argv) {
     using namespace arma;
     using namespace std;
 
-    unsigned long seed = time(NULL);
+    unsigned long seed = -time(NULL);
     srand(seed);
 //    argc = 2;
 
@@ -32,7 +32,7 @@ int main(int argc, char** argv) {
         //        A << 1 << 3 << -3 << endr
         //                << -3 << 7 << -3 << endr
         //                << -6 << 6 << -2 << endr;
-        A = randu<mat > (N, N);
+        A = randn<mat > (N, N);// + randu<mat>(N, N);
 
         cout << "-----------QR----------" << endl;
 
