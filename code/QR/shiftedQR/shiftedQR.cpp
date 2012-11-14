@@ -21,11 +21,9 @@ void shiftedQR::get_initial_condition(arma::mat& A) {
 
 void shiftedQR::get_RQ(arma::mat & A) {
 
-    //mu*I
     muI = A(n - 1, n - 1)*I;
     
     A = A - muI;
     hessenbergQRStep(A);
-    A = A + muI;
-    
+    A = A + muI;  
 }

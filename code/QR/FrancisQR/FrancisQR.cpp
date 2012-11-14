@@ -31,7 +31,7 @@ void FrancisQR::get_RQ(arma::mat & A) {
         p++;
     }
 
-    //perform a Francis QR step on this submatrix (ineffective this way but..)
+    //perform a Francis QR step on this submatrix
     subA = A(span(p, q), span(p, q));
     FrancisQRstep(subA);
     A(span(p, q), span(p, q)) = subA;

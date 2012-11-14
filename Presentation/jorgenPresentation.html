@@ -63,6 +63,7 @@
 	$
 	\renewcommand{\vec}{\mathbf}
 	\newcommand{\mat}{\mathbf}
+	\newcommand{\imply}{\quad\Longrightarrow\quad}
 	$
 	
 <section>
@@ -582,18 +583,187 @@ void householderRedHessenberg(arma::mat & A) {
 			
 			<br>
 			<br>
-			<h4 align="left">Francis' Algorithm</h4>
+			<h4 align="left">Francis QR-step</h4>
 				<ul>
-					<li>
-						Double implicit <span style="color:#FF0000">complex</span> shifts.
-					</li>
+					<li>Double implicit <span style="color:#FF0000">complex</span> shifts.</li>
 				</ul>
 		</section>
 		
 		<section>
+			<h3 align="left">General double-shifts</h3>
+			
+			<p>
+				Successive shifts $\,a_1$, $a_2 \in \mathbb{C}\,$ expressed as one QR-step:
+				\begin{eqnarray}
+											  a_2^\ast&=     & a_1 \\
+				                               \mat M &\equiv& (\mat A-a_1\mat I)(\mat A - a_2\mat I) \in \mathbb{R}^{n\times n}\\
+									   \mat Z, \mat R &=     & \mathrm{QR}(\mat M) 					 \\
+											   \mat A &=     & \mat Z^T \mat A \mat Z 				 \\
+				\end{eqnarray}
+			</p>
+			<p align="left", class="fragment">
+				Roundoff errors can avoid $\,\mat M\,$ from being real.
+			</p>
+			<p class="fragment", align="left">
+				Explicitly calculate $\,\mat M$ and the QR-step is expensive.
+			</p>
+			<p class="fragment", align="left">
+				Solution: <span style="color:#FF0000">Double implicit shifts using Francis' Algorithm</span>.
+			</p>
 			
 		</section>
 
+		<section>
+			<h3 align="left">Francis QR step</h3>
+			
+			<p align="left">
+				Double shift as $\,O(n^2)\,$ using the <span style="color:#0000FF">Implicit Q Theorem.
+			</p>
+			
+			<p class="fragment", align="left">
+				Suppose $\,\mat V\,$ and $\,\mat G\,$ both reduce $\,\mat A \in R^{n \times n}\,$ to upper Hessenberg  form. 
+				\begin{equation}
+				V_{:1} = G_{:1},\qquad k = \min\{i | A_{i+1i} = 0\} \\
+				
+				\Downarrow \\
+				
+				V_{:i} = \pm G_{:i},\quad |V_{ii-1}|= |G_{ii-1}|, \quad i= 2,...,k\\
+				k < n \imply G_{k+1k} = 0\\
+				\end{equation}
+			</p>
+			
+			<p class="fragment", align="left">
+				Essence: We only need $M_{:1}$ in order to construct $\mat Z$.
+			</p>
+			
+			<p class="fragment", align="left">
+				$\mat A$ not unreduced $\imply$ <span style="color:#FF0000">decoupled</span> subproblem. 
+			</p>
+			
+		</section>
+	
+		<section>
+			<h3>Code: Francis QR-step</h3>
+			
+			<pre><code>void FrancisQR::get_RQ(arma::mat & A) {
+    using namespace arma;
+    
+    //Find p, q such that they pick out the largest unreduced hessenberg submatrix
+    p = (int) ((A(1, 0) != 0)&(A(2, 1) == 0));
+    q = (n - 1) - (int) ((A(n - 1, n - 2) != 0)&(A(n - 2, n - 3) == 0));
+
+    while ((A(q, q - 1) == 0)) {
+        q--;
+    }
+
+    while ((A(p + 1, p) == 0) && (p != q)) {
+        p++;
+    }
+
+    //perform a Francis QR step on this submatrix
+    subA = A(span(p, q), span(p, q));
+    FrancisQRstep(subA);
+    A(span(p, q), span(p, q)) = subA;
+    
+}</code></pre>
+			
+		</section>
+	
+		<section>	
+			<pre><code>void FrancisQRstep(arma::mat & H) {
+
+    //first col of M
+    s = H(m, m) + H(n, n);
+    t = H(m, m) * H(n, n) - H(m, n) * H(n, m);
+
+    xyz(0) = H(0, 0) * H(0, 0) + H(0, 1) * H(1, 0) - s * H(0, 0) + t;
+    xyz(1) = H(1, 0)*(H(0, 0) + H(1, 1) - s);
+    xyz(2) = H(1, 0) * H(2, 1);
+
+    //"chasing the bulge"
+    for (int k = -1; k < n - 2; k++) {
+
+        house(ImBvvT, xyz);
+        
+        //q = max(0, k);
+        q = k * (int) (k > 0);
+
+        H(span(k + 1, k + 3), span(q, n)) = ImBvvT * H(span(k + 1, k + 3), span(q, n));
+
+        //r = min(k+4, n)
+        r = (k + 4 - n)*(int) (k + 4 < n) + n;
+        
+        H(span(0, r), span(k+1, k+3)) = H(span(0, r), span(k+1, k+3))*ImBvvT;
+        
+        xyz(0) = H(k+2, k+1);
+        xyz(1) = H(k+3, k+1);
+        
+        if (k < n-3){
+            xyz(2) = H(k+4, k+1);
+        }
+    }
+    
+    //bottom corner:
+    colvec xy = xyz.rows(0, 1);
+    house(ImBvvT, xy);
+    H(span(n-1, n), span(n-2, n)) = ImBvvT*H(span(n-1, n), span(n-2, n));
+    H(span(0,n), span(n-1, n)) = H(span(0,n), span(n-1, n))*ImBvvT;
+
+}</code></pre>
+			
+		</section>
+	
+		<section>
+			<h3 align="left">Methods</h3>
+			
+			<h4 align="left">Hessenberg QR-step</h4>
+				<ul>
+					<li>Pre-iteration similarity transform to Hessenberg form.</li>
+					$\qquad\qquad$ <span style="color:#0000FF">Saves CPU-time</span>.
+				</ul>
+			
+			<br>
+			<br>
+			<h4 align="left">Single-Shift QR-step</h4>
+				<ul>
+					<li>Explicit shift in diagonal element prior to QR-step.</li>
+					<li>Combinable with Hessenberg QR-step.</li>
+					$\qquad$ <span style="color:#0000FF">Accelerates convergence</span>.
+				</ul>
+			
+			<br>
+			<br>
+			<h4 align="left">Francis QR-step</h4>
+				<ul>
+					<li>Double implicit <span style="color:#FF0000">complex</span> shifts in diagonal elements.</li>
+					$\qquad$ <span style="color:#0000FF">Smarter Shifts at ~same speed</span>.
+				</ul>
+		</section>
+	</section>
+	
+	<!---------------------------------------- New Slide ------------------------------------->
+	
+	<section>
+		<section>
+			<h1>Results</h1>
+			<h3>Eigenvalues found using discussed methods</h3>
+			<br>
+			<br>
+			<pre><code>        -2.0374  -0.0275  -0.3266  -1.6190  -0.5271  -0.0902
+              0  -0.1150  -1.7269  -0.6425   0.3754  -0.2214
+              0   2.1757  -0.3407  -0.1642   1.1836  -0.5057
+              0        0        0   1.3712  -0.8496   0.6105
+              0        0        0   1.5139   1.3908  -1.2643
+              0        0        0        0        0   0.0429</code></pre>
+
+		</section>	
+		
+		<section>
+		
+		</section>
+		
+		<section>
+		</section>
 	</section>
 	
 
