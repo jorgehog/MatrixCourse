@@ -10,7 +10,8 @@
       displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
       processEscapes: true
     },
-    "HTML-CSS": { availableFonts: ["TeX"] }
+    styles: {".MathJax_SVG svg > g, .MathJax_SVG_Display svg > g": {fill: "#000000", stroke: "#000000"}},
+    "HTML-CSS": {scale: 100,  availableFonts: ["TeX"] }
   });
 </script>
 
@@ -58,206 +59,546 @@
 
 <!---------------------------------------- SLIDES ------------------------------------------>
 <div class="slides">
-	<!---------------------------------------- Custom Latex------------------------------------->
+	
 	$
 	\renewcommand{\vec}{\mathbf}
 	\newcommand{\mat}{\mathbf}
 	$
-	<!---------------------------------------- New Slide ------------------------------------->
 	
-	<section>
+<section>
 		<h1>Unsymmetric Eigensolvers</h1><br>
 		<h3>The Unsymmetric Eigenvalue Problem</h3>
+		<br>
+		<br>
+		<div><?php echo date("l, j F Y") ?></div>
 	</section>
 	
 	<!---------------------------------------- New Slide ------------------------------------->
 	
 	<section>
 		<section>
+			
 			<h1>Looking behind the curtains</h1><br>
 			<h3>Revealing the underlying problem</h3>
+			
 		</section>
 
-           <section>
-                <h3>Unsymmetric matrices</h3>
-                <p>
-                    Given real matrices, unsymmetry is the case when
-                    \begin{equation}
-                    \mat{A}^T \ne \mat{A}.
-                    \end{equation}
-
-                    Generalizable to complex matrices; <i>non-Hermitian</i> if,
-                    \begin{equation}
-                    \mat{A}^\dagger  \ne \mat{A},
-                    \end{equation}
-                    where $\mat{A}^\dagger $ denotes the conjugate transpose.
-                </p>
-           </section>
-
-			<section>
-				<h3> Unitary decompositions </h3><br>
-				<p> 
-                    $\mat{A} = \mat{Q}^\dagger \mat{\tilde{A}}\mat{Q}$
-                </p>
-                <p class="fragment">
-					The acting of a unitary matrix $\mat Q$ as above is called a <span style="color:#FF0000">similarity transformation</span>; $A$ is similar to $\tilde{A}$.
-                </p>
-                <p class="fragment">
-					By definition $Q^\dagger Q = \mat I \longrightarrow$ $|\det(\mat Q)|^2 = 1$<br><br>
-				</p>
-                <p class="fragment">	
-					The determinant is <span style="color:#FF0000">conserved</span> under a similarity transform.
-                </p>
-                
-                    
-				</p>
-			</section>
-
-           <section>
-                <h3>The problem</h3>
-                <p>
-                    \begin{equation}
-                    \mat{A} \vec{v} = \lambda\mat{v}
-                    \end{equation}
-
-                    Eigenvalues are the roots of the <i>characteristic polynomial</i>
-                    \begin{equation}
-                    P(\lambda) = \det (\mat{A} - \lambda\mat{I_n}) = c_0 + c_1\lambda + c_2\lambda^2 + ... + \lambda^n
-                    \end{equation}
-                    
-                    <p class="fragment">
-						Conservation of determinants in similarity transformations implies the conservation of the characteristic polynomial.<br>
-					</p>
-					<p class="fragment"> 
-						<span style="color:#FF0000">Similarity transformations conserve the eigenvalues</span>.
-					</p> 
-                </p>
-           </section>
-           
-           <section>
-				<h4 align="left">Proof:</h4>
-           \begin{eqnarray}
-           \tilde{P}(\lambda) &=& \det (\mat{Q}^\dagger \mat{AQ} - \lambda\mat{I})           \\
-                              &=& \det (\mat{Q}^\dagger \mat{AQ} - \lambda\mat{Q}^\dagger \mat{Q})         \\
-                              &=& \det (\mat{Q}^\dagger (A - \lambda\mat{I})\mat{Q}^\dagger ) 		  \\
-                              &=& \det (\mat{Q}^\dagger \mat{Q})\det (\mat{A} - \lambda\mat{I}) \\
-                              &=& P(\lambda)
-           \end{eqnarray}
-           
-           </section>
-                
-           <section>
-				<h3>The solution</h3><br>
-				<p>
-					Unitary decompositions to matrices with revealing eigenvalues. 
-				</p>
-				<p class="fragment">
-					E.g. diagonalization:
-					\begin{equation}
-					\mat A = \mat{P}^{-1}\mat{DP},\qquad \mat D_{ij} = \lambda_{i}\delta_{ij}, \qquad \vec P_{:j} = \vec v_j
-					\end{equation}
-				</p>
-				<p class="fragment">
-					$\lambda_i = \Big(\mat P \mat A \mat P^{-1}\Big)_{ii}$
-				</p>
-				<p class="fragment">
-					Note: Requires a complete set of eigenvectors. <span style="color:#FF0000">Not the general case for unsymmetric matrices</span>.
-				</p>
-				
-           </section>
-      </section>
-      <section>
-           
-           <section>
-				<h1>Generalizations</h1><br>
-				<h3>Based on the symmetric case</h3>
-           </section>
-           
-           <section>
-				<p>
-					Expanding $\mat A \in \mathbb{C}$ in Hermitian matrices
-				</p>
-           
-				<p class="fragment">
-					\begin{eqnarray}
-					\mat A &=& \frac{1}{2}\Big(\mat A + \mat A^\dagger \Big) + i\Big(-\frac{1}{2}i\left(A - A^\dagger \right)\Big) \\
-						   &\equiv& \mat B + i\mat C
-					\end{eqnarray}
-				</p>
-           
-				<p class="fragment">
-					$\mat B$ and $\mat C$ both have complete sets of eigenvectors, however, these are <span style="color:#FF0000">not necessarily equal</span>.
-				</p>
-           </section>
-           
-           <section>
-				<p>
-					$\mat A$, $\mat B$ and $\mat C$ all share eigenvectors if<br><br>
-				</p>
-				<p class="fragment">
-					$[\mat A, \mat B] = [\mat A, \mat C] = [\mat B, \mat C] = \mat 0$
-				</p>
-		   
-				<p class="fragment">
-					$$\Downarrow$$
-					$[\mat A, \mat A^\dagger ] = \mat 0$
-				</p>
-
-				<p class="fragment"><br>
-					All <span style="color:#0000FF">normal</span> matrices are diagonalizable matrices.
-				</p>
-	
-           </section>
-                
-			<section>
-				<h3 align="left">Alternative unitary decomposition: <span style="color:#0000FF">Schur</span></h3>
-				<p class="fragment">$\mat A = \mat{Q}^\dagger \mat S\mat{Q}$</p>
-				<p class = "fragment">
-					\begin{equation}
-					\mat S = \mat{Q}\mat A\mat{Q}^\dagger  = \left( 
-					\begin{array}{cccccc}
-					\mat S_{11} & \times & \times &  \times & \cdots &  \times \\
-					0           & \ddots & \times &  \times & \cdots &  \times  \\
-					0           &  0     &        &  \times & \cdots &  \times   \\
-					\vdots      & \vdots & \ddots &  \ddots &        &  \vdots    \\
-					0           & 0      &        &         &        &  \times	   \\
-					0           & 0	     & \cdots & 	0	& 0	     &  \mat S_{nn} \\
-					\end{array} \right) 
-					\end{equation} 
-					where $\lambda_j=\mat S_{ii}$ (not uniquely ordered).
-				</p>
-				
-			</section>
-			
-			<section>
-				<p>
-					$$\mat S = \mat D + \mat N,\qquad \mat Q = [\vec q_1, ..., \vec q_n]$$
-					where $\mat N$ is strictly upper triangular and  $\vec q_k$ is called a <i>Schur vector</i>.
-				</p>
-			
-				<p class="fragment">
-					$$ \mat N_{:k}=\vec 0 \longrightarrow \mat A \vec q_k = \lambda_i\vec q_k$$
-				</p>
-			
-				<p class="fragment">
-					Can be shown that $\mat N = \mat 0$ for all normal matrices.
-				</p>
-			
-				<p class="fragment">
-					<span style="color:#FF0000">Diagonalization is a special case of Schur decomposition where the matrix at hand is normal.</span>
-				</p>
-			
-			</section>
-		</section>
-	
-		
-	
 		<section>
-			<h1>Power iterations</h1>
-			<h3>with focus on QR-iterations</h3>
+		<h3>Unsymmetric matrices</h3>
+			<p>
+				Given real matrices, unsymmetry is the case when
+				\begin{equation}
+				\mat{A}^T \ne \mat{A}.
+				\end{equation}
+
+				Generalizable to complex matrices; <i>non-Hermitian</i> if,
+                \begin{equation}
+                \mat{A}^\dagger  \ne \mat{A},
+                \end{equation}
+                where $\mat{A}^\dagger $ denotes the conjugate transpose.
+			</p>
 		</section>
+
+		<section>
+			<h3> Unitary decompositions </h3><br>
+			
+			<p> 
+				$\mat{A} = \mat{Q}^\dagger \mat{\tilde{A}}\mat{Q}$
+            </p>
+            
+            <p class="fragment">
+				$$Q^\dagger Q = \mat I \longrightarrow |\det(\mat Q)|^2 = 1$$<br>
+			</p>
+			
+			<p class="fragment"> 
+				$\mat{\tilde{A}} = \mat{Q} \mat{A}\mat{Q}^\dagger$
+            </p>
+            
+            <p class="fragment">
+				Above: <span style="color:#FF0000">similarity transformation</span><br> $A$ is similar to $\tilde{A}$.
+            </p>
+			
+            <p class="fragment">	
+				The determinant is <span style="color:#FF0000">conserved</span> under a similarity transform.
+            </p>
+           
+		</section>
+
+        <section>
+			
+			<h3>The problem</h3>
+			
+            <p>
+                \begin{equation}
+                \mat{A} \vec{v} = \lambda\mat{v}
+                \end{equation}
+
+                Eigenvalues are the roots of the <i>characteristic polynomial</i>
+                \begin{equation}
+                P(\lambda) = \det (\mat{A} - \lambda\mat{I_n}) = c_0 + c_1\lambda + c_2\lambda^2 + ... + \lambda^n
+                \end{equation}
+            </p>
+                    
+            <p class="fragment">
+				<br>The polynomial is <span style="color:#FF0000">conserved</span> under a similarity transform.<br>
+			</p>
+			
+			<p class="fragment"> 
+				The eigenvalues are <span style="color:#FF0000">conserved</span> under a similarity transform.<br>
+			</p> 
+            
+		</section>
+           
+		<section>
+			
+			<h4 align="left">Proof:</h4>
+			
+			\begin{eqnarray}
+			\tilde{P}(\lambda) &=& \det (\mat{Q}^\dagger \mat{AQ} - \lambda\mat{I})           \\
+						       &=& \det (\mat{Q}^\dagger \mat{AQ} - \lambda\mat{Q}^\dagger \mat{Q})         \\
+                               &=& \det (\mat{Q}^\dagger (A - \lambda\mat{I})\mat{Q} ) 		  \\
+                               &=& \det (\mat{Q}^\dagger \mat{Q})\det (\mat{A} - \lambda\mat{I}) \\
+                               &=& P(\lambda)
+			\end{eqnarray}
+           
+		</section>
+                
+		<section>
+			
+			<h3>The solution</h3><br>
+			
+			<p>
+				Unitary decompositions to matrices with revealing eigenvalues. 
+			</p>
+			
+			<p class="fragment">
+				E.g. diagonalization:
+				\begin{equation}
+				\mat A = \mat{P}^{-1}\mat{DP},\qquad \mat D_{ij} = \lambda_{i}\delta_{ij}, \qquad \vec P_{:j} = \vec v_j
+				\end{equation}
+			</p>
+			
+			<p class="fragment">
+				$\lambda_i = \Big(\mat P \mat A \mat P^{-1}\Big)_{ii}$
+			</p>
+			
+			<p class="fragment">
+				Note: Requires a complete set of eigenvectors. <span style="color:#FF0000">Not the general case for unsymmetric matrices</span>.
+			</p>
+				
+		</section>
+	</section>
 	
-	</div>
+	<!---------------------------------------- New Slide ------------------------------------->
+	
+	<section>      
+		<section>
+			
+			<h1>Generalizations</h1><br>
+			<h3>Based on the symmetric case</h3>
+				
+		</section>
+           
+        <section>
+			<p>
+				Expanding $\mat A \in \mathbb{C}$ in <span style="color:#FF0000">Hermitian</span> matrices
+			</p>
+           
+			<p class="fragment">
+				\begin{eqnarray}
+				\mat A &=& \frac{1}{2}\Big(\mat A + \mat A^\dagger \Big) + i\Big(-\frac{1}{2}i\left(A - A^\dagger \right)\Big) \\
+					   &\equiv& \mat B + i\mat C
+				\end{eqnarray}
+			</p>
+           
+			<p class="fragment">
+				$\mat B$ and $\mat C$ are <span style="color:#FF0000">both diagonalizable</span>.
+				$$\mat A = \mat P_B^{-1}\mat D_B \mat P_B + \mat P_C^{-1}i\mat D_C \mat P_C$$
+			</p>
+			
+			<p class="fragment">
+				$$\mat A \stackrel{?}{=} \mat P^{-1}\Big(\mat D_B  + i\mat D_C\Big)\mat P$$
+			</p>
+           
+		</section>
+           
+		<section>
+			<p>
+				$\mat A$, $\mat B$ and $\mat C$ all share eigenvectors if<br><br>
+			</p>
+
+			<p class="fragment">
+				$[\mat A, \mat B] = [\mat A, \mat C] = [\mat B, \mat C] = \mat 0$
+			</p>
+		   
+			<p class="fragment">
+				$$\Downarrow$$
+				$[\mat A, \mat A^\dagger ] = \mat 0$
+			</p>
+
+			<p class="fragment"><br>
+				All <span style="color:#0000FF">normal</span> matrices are diagonalizable matrices.
+			</p>
+	
+		</section>
+                
+		<section>
+			<h3 align="left">Alternative unitary decomposition: <span style="color:#0000FF">Schur</span></h3>
+			
+			<p class="fragment">$\mat A = \mat{Q}^\dagger \mat S\mat{Q}$</p>
+			
+			<p class = "fragment">
+				\begin{equation}
+				\mat S = \mat{Q}\mat A\mat{Q}^\dagger  = \left( 
+				\begin{array}{cccccc}
+					 S_{11} & \times & \times &  \times & \cdots &  \times \\
+				0           & \ddots & \times &  \times & \cdots &  \times  \\
+				0           &  0     &        &  \times & \cdots &  \times   \\
+				\vdots      & \vdots & \ddots &  \ddots &        &  \vdots    \\
+				0           & 0      &        &         &        &  \times	   \\
+				0           & 0	     & \cdots & 	0	& 0	     &  S_{nn} 		\\
+				\end{array} \right) 
+				\end{equation} 
+				where $\lambda_j= S_{ii}$ (not uniquely ordered).
+			</p>
+				
+		</section>
+			
+		<section>
+			<p>
+				$$\mat S = \mat D + \mat N,\qquad \mat Q = [\vec q_1, ..., \vec q_n]$$
+				$\mat N$ is strictly upper triangular<br>
+				$\vec q_k$ is called a <span style="color:#FF0000">Schur vector</span>.
+			</p>
+			
+			<p class="fragment">
+				$$ \mat N_{:k}=\vec 0 \longrightarrow \mat A \vec q_k = \lambda_i\vec q_k$$
+			</p>
+		
+			<p class="fragment">
+				$\mat A$ is <span style="color:#0000FF">normal</span> $\Longrightarrow \mat N = \mat 0$
+			</p>
+			
+			<p class="fragment">
+				<span style="color:#FF0000">Diagonalization is a special case of Schur decomposition where the matrix at hand is normal.</span>
+			</p>
+			
+		</section>
+	</section>
+	
+	<!---------------------------------------- New Slide ------------------------------------->
+	
+	<section>
+		<section>
+			
+			<h1>Power iterations</h1>
+			<h3>Iterative reduction to Schur forms</h3>
+		
+		</section>
+    
+		<section>
+			<h3 align="left">
+				Orthogonal iteration
+			</h3><br>
+		
+			<p>
+				$\mat A \in \mathbb{C}^{n\times n},\quad r \in [1, n], \quad \mat Q_k \in \mathbb{C}^{n\times r}$
+			</p>
+		
+			<p>
+				\begin{eqnarray}
+				& & \mathbf{for}\,k=1,2,...\\
+				& & \qquad \mat Z_k = \mat A\mat Q_{k-1}\\
+				& & \qquad \mat Q_k, \mat R_k = \mathrm{QR}\Big(\mat Z_{k}\Big)\\
+				\end{eqnarray}
+			</p>
+			
+			<p class="fragment", align="left">
+			$r=1\qquad$ Power method<br>
+			$r=n\qquad$ QR iteration
+			</p>
+		
+		</section>
+    
+    
+		<section>
+<!--
+	
+-->
+			<h3 align="left">
+				QR iterations
+			</h3>
+
+			<p>
+				\begin{eqnarray}
+				& & \mat T_0 = \mat U_0^\dagger \mat A \mat U_0\\
+				& & \mathbf{for}\,k=1,2,...\\
+				& & \qquad \mat U_k, \, \mat R_k = \mathrm{QR}\Big(\mat T_{k-1}\Big)\\
+				& & \qquad \mat T_k = \mat R_k\mat U_k \\
+				\end{eqnarray}
+			</p>
+		
+			<p class="fragment", align="left"><br>
+				$\mat R_k = \mat U_k^\dagger \mat T_{k-1}$ <br>
+				<span style="color:#FF0000">$\mat T_k$ is similar to $A$</span>.
+			</p>
+		
+			<p class="fragment", align="left">
+				$\mat T_k$ converges to <span style="color:#0000FF">Schur form</span>.
+			</p>
+		
+		</section>
+    </section>
+	
+	<!---------------------------------------- New Slide ------------------------------------->
+	
+	<section>
+		<section>
+			<h1>Case Study</h1>
+			<h3>Eigenvalues of real anti-symmetric matrices</h3>
+		</section>
+
+		<section>
+			<h2>Real case vs. Complex case</h2>
+			<br>
+			<h4 align="left">Motivation:</h4>
+		
+				<ul class="fragment">
+						<li>Majority of eigenvalue problems involve real data.</li>
+						<li>Simpler implementations. </li>
+				</ul>
+				
+			<br>
+			<br>
+			<h4 align="left">Challenges:</h4>
+		
+				<ul class="fragment">
+						<li>Given complex eigenvalues, no Schur form can be obtained.</li>
+				</ul>
+		
+			<br>
+			<br>
+			<h4 align="left">Solutions:</h4>
+			
+				<p class="fragment">
+					Alternative decomposition: <span style="color:#0000FF">real Schur form</span> <br>
+					(upper <i>quasi-triangular</i> form)
+				</p>
+				
+		</section>
+		
+		<section>
+			<h3 align="left">real Schur form:</h4>
+			
+			<p>
+				\begin{equation}
+				\mat Q^T\mat A\mat Q = \left( 
+				\begin{array}{cccccc}
+				\mat S_{11} & \mat S_{12} & \times &  \times & \cdots &  \mat S_{1m} \\
+				0           & \mat S_{22} & \times &  \times & \cdots &  \mat S_{2m}  \\
+				0           &  0          & 	   &  		 & 		  &  	           \\
+				\vdots      & \vdots      & 	   &  \ddots &        &  \vdots         \\
+							&             &        &         &        &  		         \\
+				0           & 0	          & \cdots & 		 & 		  &  \mat S_{mm}      \\
+				\end{array} \right) 
+				\end{equation} 
+			</p>
+			<br>
+			<p>
+				$\mat S_{ii} \in \mathbb{R}^{2\times 2} \vee \mat S_{ii} \in \mathbb{R}^{1\times 1}\,|\,i = 1,2,...,m \le n$.
+			</p>
+		
+		</section>
+
+		<section>
+			<h3 align="left">Methods</h3>
+			
+			<h4 align="left">Hessenberg QR-step</h4>
+				<ul>
+					<li>Pre-iteration similarity transform to Hessenberg form.</li>
+				</ul>
+		
+		</section>
+		
+		<section>
+			<h3 align="left">Hessenberg QR-step:</h3>
+			<ul>
+				<li>Initial condition: Hessenberg form (zeros beneath sub-diagonal).</li>
+				<li>A QR-step conserve the Hessenberg form.</li>
+				<li>Specialized algorithm <span style="color:#0000FF">Hessenberg QR-step</span> for calculating 
+				$$\mat Q_k, \mat R_k = \mathrm{QR}\Big(\mat A\Big)$$
+				$$\mat A = \mat Q_k \mat R_k$$</li>
+				<li>$O(n^2)\,$ contra general QR's $\,O(n^3)$.</li>
+			</ul>
+			
+			
+		</section>
+		
+		<section>
+			
+			<h3>Code: Hessenberg QR-step</h3>
+			<pre><code>void HessenbergQR::get_RQ(arma::mat & A){
+    hessenbergQRStep(A);
+}</code></pre>
+			<pre><code>//Overwrites H with H+ = RQ by algorthm 7.4.1
+void hessenbergQRStep(arma::mat & H) {
+
+    //Initalizations etc.
+
+    for (int k = 0; k < n - 1; k++) {
+        givens(H(k, k), H(k + 1, k), Gk);
+        G(k) = Gk;
+        
+        H(span(k, k + 1), span(k, n - 1)) = strans(Gk) * H(span(k, k + 1), span(k, n - 1));
+    }
+
+    for (int k = 0; k < n - 1; k++) {
+        H(span(0, k + 1), span(k, k + 1)) = H(span(0, k + 1), span(k, k + 1)) * G(k);
+    }
+}</code></pre>
+			
+		</section>
+		
+		<section>
+					
+			<h3>Code: Householder reduction to Hessenberg form</h3>
+			<pre><code>void HessenbergQR::get_initial_condition(arma::mat& A){
+    householderRedHessenberg(A);
+}</code></pre>
+			<pre><code>//Overwrites A with H= U0^T A U_0 where H is upper Hessenberg. 
+//Algorthm 7.4.2
+void householderRedHessenberg(arma::mat & A) {
+    
+    //initializations etc.
+
+    for (int k = 0; k < n - 2; k++) {
+        x = A(span(k + 1, n - 1), k);
+        house(ImBvvT, x);
+        A(span(k + 1, n - 1), k) = x;
+
+        A(span(k + 1, n - 1), span(k, n - 1)) = ImBvvT * A(span(k + 1, n - 1), span(k, n - 1));
+        A(span(), span(k + 1, n - 1)) = A(span(), span(k + 1, n - 1)) * ImBvvT;
+    }
+}</code></pre>
+			
+		</section>
+
+		<section>
+			<h3 align="left">Methods</h3>
+			
+			<h4 align="left">Hessenberg QR-step</h4>
+				<ul>
+					<li>Pre-iteration similarity transform to Hessenberg form.</li>
+					$\qquad\qquad$ <span style="color:#0000FF">Saves CPU-time</span>.
+				</ul>
+			
+			<br>
+			<br>
+			<h4 align="left">Single-Shift QR-step</h4>
+				<ul>
+					<li>Shift in diagonal element prior to QR-step.</li>
+					<li>Combinable with Hessenberg QR-step.</li>
+				</ul>
+			
+		</section>
+
+		<section>
+			<h3 align="left">Single-Shift QR-step:</h3>
+			<p>
+				$$\mat Q_k, \mat R_k = \mathrm{QR}\Big(\mat A - \mu\mat I\Big)$$
+				$$\mat A = \mat Q_k \mat R_k + \mu\mat I$$</li>
+			</p>
+			
+			<h4 align="left">Similarity transformation</h4>
+			<p>
+				\begin{eqnarray}
+					\mat A = \mat R\mat U + \mu\mat I &=& \mat Q^T\left(\mat Q\mat R + \mu\mat I\right)\mat Q\\
+													  &=& \mat Q^T\left(\mat A - \mu\mat I + \mu\mat I\right)\mat Q\\
+													  &=& \mat Q^T\mat A\mat Q
+				\end{eqnarray}
+			</p>
+		
+		</section>
+
+		<section>
+			<h3 align="left">Choise of shift - guessing an Eigenvalue</h3>
+			
+			<p class="fragment">
+				$$\mu=\lambda_A\quad\Longrightarrow\quad A_{nn} = \lambda_A,\,\, A_{nn-1} = 0$$
+			</p>
+			
+			<br>
+			<br>
+			<p class="fragment", align="left">
+				$\mat A$ assumed <span style="color:#FF0000"> real </span>. Sophisticated choices ruled out.
+			</p>
+			
+			<p class="fragment", align="left">
+				$A_{nn}$ best approximate eigenvalue.
+			</p>
+			
+			<p class="fragment", align="left">
+				Unstable in the case of (assumed real) anti-symmetric matrices.
+			</p>
+		
+		</section>
+
+		<section>
+					
+			<h3>Code: Single-Shift QR-step</h3>
+			
+			<pre><code>void shiftedQR::get_initial_condition(arma::mat& A) {
+    householderRedHessenberg(A);
+}</code></pre>
+
+			<pre><code>void shiftedQR::get_RQ(arma::mat & A) {
+
+    muI = A(n - 1, n - 1)*I;
+    
+    A = A - muI;
+    hessenbergQRStep(A);
+    A = A + muI;  
+}</code></pre>
+			
+		</section>
+		
+		<section>
+			<h3 align="left">Methods</h3>
+			
+			<h4 align="left">Hessenberg QR-step</h4>
+				<ul>
+					<li>Pre-iteration similarity transform to Hessenberg form.</li>
+					$\qquad\qquad$ <span style="color:#0000FF">Saves CPU-time</span>.
+				</ul>
+			
+			<br>
+			<br>
+			<h4 align="left">Single-Shift QR-step</h4>
+				<ul>
+					<li>Explicit shift in diagonal element prior to QR-step.</li>
+					<li>Combinable with Hessenberg QR-step.</li>
+					$\qquad$ <span style="color:#0000FF">Accelerates convergence</span>.
+				</ul>
+			
+			<br>
+			<br>
+			<h4 align="left">Francis' Algorithm</h4>
+				<ul>
+					<li>
+						Double implicit <span style="color:#FF0000">complex</span> shifts.
+					</li>
+				</ul>
+		</section>
+		
+		<section>
+			
+		</section>
+
+	</section>
+	
+
+	
+
 	<!-- The navigational controls UI -->
 	<aside class="controls">
 		<a class="left" href="#">&#x25C4;</a>

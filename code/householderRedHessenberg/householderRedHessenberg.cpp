@@ -1,6 +1,7 @@
 
 #include "../matrixHeaders.h"
 
+//Overwrites A with H= U0^T A U_0 where H is upper Hessenberg. Algorthm 7.4.2
 void householderRedHessenberg(arma::mat & A) {
     using namespace arma;
 
