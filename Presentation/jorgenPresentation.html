@@ -320,6 +320,22 @@
 			</p>
 		
 		</section>
+		
+		<section>
+			<h3 align="left">Convergence of Orthogonal iterations</h3> 
+			<p align="left", class="fragment">
+				Let $\mat Q$ be a unitary matrix such that
+				$$\mat Q^\dagger \mat A \mat Q = \mat S = \mat D + \mat N$$
+			</p>
+			<p align="left", class="fragment">
+				and $\mat Q_k$ is the $k$'th iteration's similarity transform matrix, then 
+				$$\mathrm{dist}(\mathrm{ran}(\mat Q), \mathrm{ran}(\mat Q_k)) \le c\left|\frac{\lambda_{r+1}}{\lambda_r}\right|^k$$
+			</p>
+			
+			<p align="left", class="fragment">
+				Eigenvalue degeneracy hinders convergence.
+			</p>
+		</section>
     
     
 		<section>
@@ -622,11 +638,11 @@ void householderRedHessenberg(arma::mat & A) {
 			
 			<p class="fragment", align="left">
 				Suppose $\,\mat V\,$ and $\,\mat G\,$ both reduce $\,\mat A \in R^{n \times n}\,$ to upper Hessenberg  form. 
+			</p>
+			<p class="fragment">
 				\begin{equation}
-				V_{:1} = G_{:1},\qquad k = \min\{i | A_{i+1i} = 0\} \\
-				
+				V_{:1} = G_{:1},\qquad k = \min\{i | A_{i+1i} = 0\} \\	
 				\Downarrow \\
-				
 				V_{:i} = \pm G_{:i},\quad |V_{ii-1}|= |G_{ii-1}|, \quad i= 2,...,k\\
 				k < n \imply G_{k+1k} = 0\\
 				\end{equation}
@@ -739,6 +755,150 @@ void householderRedHessenberg(arma::mat & A) {
 					$\qquad$ <span style="color:#0000FF">Smarter Shifts at ~same speed</span>.
 				</ul>
 		</section>
+		
+		<section>
+			<h3>Eigenvectors</h3>
+			<p>
+				All methods described can be used to get the eigenvectors.
+			</p>
+			<p class="fragment">
+				However, only efficient if you are interested in all the eigenvectors.
+			</p>
+			
+			<p class="fragment">
+				For a subset of the eigenvectors, methods such as <i>inverse iteration</i> are more efficient.
+			</p>
+		</section>
+		
+	</section>
+	<!---------------------------------------- New Slide ------------------------------------->
+	
+	<section>
+		<section>
+			<h1>The Code</h1>
+			<h3>Implementations of discussed methods</h3>
+		</section>
+		
+		<section>
+				<pre><code>class QR {
+protected:
+    //variables
+   
+    void deflate(arma::mat & A);
+
+    virtual void get_initial_condition(arma::mat & A) {
+
+    }
+
+    void get_eigvals_from_realschur(arma::mat & A);
+
+    virtual void get_RQ(arma::mat & A);
+
+    bool check_cond(arma::mat & A, bool dump);
+
+public:
+    
+    void iterate(bool dump = true);
+
+};</code></pre>
+			
+		</section>
+		
+		<section>
+			<pre><code>void QR::iterate(bool dump) {
+
+    //declarations
+  
+    get_initial_condition(A); //virtual
+    while (iterations < max_iter) {
+
+        deflate(A); //deflates lower triangular part
+
+        not_on_real_schur_form = check_cond(A, dump);
+        if (!not_on_real_schur_form) {
+            break;
+        }
+
+        get_RQ(A); //virtual
+        iterations++;
+    }
+
+    get_eigvals_from_realschur(A);
+}</code></pre>
+		</section>
+		
+		<section>
+			<h3 align="left">Subclasses overriding virtual methods</h3>
+			<pre><code>class FrancisQR : public QR{
+public:
+    FrancisQR(arma::mat & A, double eps = 1E-6, int max_iter = 1000);
+protected:
+
+    arma::mat subA;
+    int p, q;
+    
+    virtual void get_initial_condition(arma::mat & A);
+
+    virtual void get_RQ(arma::mat & A);
+
+};</code></pre>
+		</section>
+		
+		<section>
+		<h3 align="left">Defining the condition</h3>
+			<p>
+				Suppose we can write our matrix in the following way
+				$$\mat A = \mat L + \mat H,$$
+				where $\mat H$ is on Hessenberg form and $\mat L$ has zeros from the sub-diagonal and up.
+			</p>
+			<p class="fragment">
+				$$||L||_F=0$$ 
+				implies Hessenberg form, not real Schur form.
+			</p>
+			<p class="fragment">
+				First condition term $c_1 = ||L||_F$.
+			</p>
+		</section>
+		
+		<section>
+		<h3 align="left">Condition for real Schur form</h3>
+			<p>
+				Let $\mathbf{\tilde{D}} \in \mathbb{R}^{n-1}$ be the sub-diagonal of $\mat A \in \mathbb{R}^{n\times n}$
+				<br>
+				<br> 
+				<pre><code>        -2.0374  -0.0275  -0.3266  -1.6190  -0.5271  -0.0902
+              0  -0.1150  -1.7269  -0.6425   0.3754  -0.2214
+              0   2.1757  -0.3407  -0.1642   1.1836  -0.5057
+              0        0        0   1.3712  -0.8496   0.6105
+              0        0        0   1.5139   1.3908  -1.2643
+              0        0        0        0        0   0.0429</code></pre>
+              <pre><code>              0   2.1757        0   1.5139        0</code></pre>
+			</p>
+			
+			<p class="fragment">
+				If $\mathbf{\tilde{D}}$ has two subsequent non-zero elements, $\mat A$ is <span style="color:#FF0000">not</span> on real Schur form.
+			</p>
+			
+			<p class="fragment">
+				$$c_2 = \sqrt{|\mathbf{\tilde{D}}_{1:n-2}\cdot \mathbf{\tilde{D}}_{2:n-1}|}$$
+			</p>
+			
+		</section>
+		
+		<section>
+			<h3 align="left">Condition summarized</h3>
+			<p>
+				$$c = ||L||_F + \sqrt{|\mathbf{\tilde{D}}_{1:n-2}\cdot \mathbf{\tilde{D}}_{2:n-1}|}$$
+			</p>
+			
+			<p class="fragment">
+				Is <span style="color:#FF0000">exact zero</span> if we have iterated to a real Schur form due to deflation.
+			</p>
+		</section>
+		
+		
+
+		
 	</section>
 	
 	<!---------------------------------------- New Slide ------------------------------------->
@@ -747,26 +907,120 @@ void householderRedHessenberg(arma::mat & A) {
 		<section>
 			<h1>Results</h1>
 			<h3>Eigenvalues found using discussed methods</h3>
-			<br>
-			<br>
-			<pre><code>        -2.0374  -0.0275  -0.3266  -1.6190  -0.5271  -0.0902
-              0  -0.1150  -1.7269  -0.6425   0.3754  -0.2214
-              0   2.1757  -0.3407  -0.1642   1.1836  -0.5057
-              0        0        0   1.3712  -0.8496   0.6105
-              0        0        0   1.5139   1.3908  -1.2643
-              0        0        0        0        0   0.0429</code></pre>
+			
 
 		</section>	
 		
 		<section>
+		<h2>Things are not always stable...</h2>
+		</section>
+		
+		<section>
+			<h2> Eigenvalues</h2>
+			<img src="images/474993589329EIGVALS.png" alt="Eigvals 0">
 		
 		</section>
 		
 		<section>
+			<h2> Convergence</h2>
+			<img src="images/474993589329CONVERGANCE0.png" alt="Convergence 0_0">
 		</section>
+		
+		<section>
+			<h2> Convergence</h2>
+			<img src="images/474993589329CONVERGANCE1.png" alt="Convergence 0_1">
+		</section>
+				
+		<section>
+		<h2>Lots of cool matrices at</h2>
+		<a href="http://math.nist.gov/MatrixMarket/data/">Matrix market</a>
+		</section>
+		
+		<section>
+			<h3 align="left">Nuclear reactor model from the <a href="http://math.nist.gov/MatrixMarket/collections/hb.html">Harwell-Boeing Collection</a></h3>
+			<img src="images/nnc261.gif" alt="NCRM">
+		</section>
+		
+		<section>
+			<h2> Eigenvalues</h2>
+			<img src="images/69185430208EIGVALS.png" alt="Eigvals 1">
+		
+		</section>
+		
+		<section>
+			<h2> Convergence</h2>
+			<img src="images/69185430208CONVERGANCE1.png" alt="Convergence 1_1">
+		</section>
+		
+		<section>
+		<h3>Francis is somewhat bugged.. For large matrices, the decoupling algorithm fails...</h3>
+		<p class="fragment">:-(</p>
+		<br>
+		<br>
+		<p class="fragment">Concept illustrated for low dimensionality.</p>
+		<p class="fragment">:-)</p>
+		</section>
+		
+		<section>
+			<h2> Illustrating concept</h2>
+			<img src="images/966891295214EIGVALS.png" alt="Eigvals 2">
+		
+		</section>
+		
+		<section>
+			<img src="images/966891295214CONVERGANCE0.png" alt="Convergence 2_0">
+		</section>
+		
+		<section>
+			<img src="images/966891295214CONVERGANCE1.png" alt="Convergence 2_1">
+		</section>
+		
 	</section>
 	
+	<!---------------------------------------- New Slide ------------------------------------->
+	
+	<section>
+		<section>
+			<h1>Summary</h1>
+		</section>
+		
+		<section>
+			<p align="left">
+				QR iteration is a special case of Orthogonal iteration.
+			</p>
+			<br>
+			
+			<p class="fragment", align="left">	
+				As is the power method and inverse iteration.
+			</p>
+			
+			<br>
+			<p class="fragment", align="left">
+			Convergence of QR-iterations to Schur form depends on the spacing of eigenvalues.
+			</p>
+			
+			<br>
+			<p class="fragment", align="left">
+				Optimized convergence through shifts in eigenvalues.
+			</p>
+			
+			<br>
+			<p class="fragment", align="left">
+				Francis QR-step by far most efficient (given no bugs).
+			</p>
+			
+			<br>
+			<p class="fragment", align="left">
+				If all eigenvalues and eigenvectors are wanted, QR iterations are efficient.
+			</p>
 
+			
+		</section>	
+		
+		<section>
+			<h1>The end</h1>
+		</section>
+	</section>
 	
 
 	<!-- The navigational controls UI -->

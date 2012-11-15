@@ -18,7 +18,10 @@ int main(int argc, char** argv) {
     unsigned long seed = -time(NULL);
     srand(seed);
 //    argc = 2;
-
+    mat A;
+//    A.load("/home/jorgmeister/scratch/testIn.arma", raw_ascii);
+//    cout << accu(A)/(A.n_cols*A.n_rows) << endl;
+//    exit(1);
     if (argc == 4) {
         int N = atoi(argv[1]);
         if (N < 4){
@@ -28,7 +31,7 @@ int main(int argc, char** argv) {
         double eps = atof(argv[2]);
         double Nmax = atoi(argv[3]);
 //        int N = 5;
-        mat A;
+//        mat A;
         //        A << 1 << 3 << -3 << endr
         //                << -3 << 7 << -3 << endr
         //                << -6 << 6 << -2 << endr;

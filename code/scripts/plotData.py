@@ -3,19 +3,26 @@
 from scitools.std import *
 import os, re
 
-n =20;
-eps=0.001
-nm = n*100
+n =5;
+eps=0.00001
+nm = 1000
+
+fetchfile = 210393130523
+fetch = False
+
 
 programPath = os.path.expanduser("~") + "/NetBeansProjects/matrixCourse/dist/Debug/GNU-Linux-x86"
 programName = "matrixcourse"
-tag = str(random.random())[2:]
-outname = "output_" + tag + ".txt"
 
-print "TAG: ", tag, "\n"
-
-os.system("%s/%s %d %g %d > ../output/%s" % (programPath, programName, n,eps, nm, outname))
-
+if not fetch:
+    tag = str(random.random())[2:]
+    outname = "output_" + tag + ".txt"
+    print "TAG: ", tag, "\n"
+    os.system("%s/%s %d %g %d > ../output/%s" % (programPath, programName, n,eps, nm, outname))
+else:
+    tag = str(fetchfile)
+    outname = "output_" + str(fetchfile) + ".txt"
+    
 inFile = open("../output/" + outname, 'r')
 infile = inFile.read()
 inFile.close()
@@ -60,11 +67,12 @@ cond = []
 armaEig = zeros([n, 2])
 
 p = re.compile("^cond:(.+)$", re.MULTILINE)
-p_eig = re.compile("^\s*([\+\-]?\d+\.?\d*)\s+([\+\-]?\d+\.?\d*)\s*$", re.MULTILINE)
+p_eig = re.compile("^\s*([\+\-]?\d+\.?\d*e?[\+\-]?\d*)\s+([\+\-]?\d+\.?\d*e?[\+\-]?\d*)\s*$", re.MULTILINE)
 p_eigA = re.compile("^\s*\(([\+\-]?\d+\.?\d*e[\+\-]?\d+)\,\s*([\+\-]?\d+\.?\d*e[\+\-]?\d+)\)\s*$", re.MULTILINE)
 
 i = 0
 for methodDump in infile.split("Eigenvalues by arma::eig_gen():")[0:-1]:
+    
     cond.append([float(x) for x in p.findall(methodDump)])
     eigvals[i][:] = array(p_eig.findall(methodDump))
     i+=1
@@ -131,7 +139,7 @@ for i in range(len(methods)):
              hardcopy="../output/" + tag + "CONVERGANCE0.png")
 
 figure(1)
-plot(armaEig[:,0], armaEig[:,1], "r*", hold="on", 
+plot(armaEig[:,0], armaEig[:,1], "k*", hold="on", 
      legend="arma::eig_gen()",
 #     axis=axisEig,
      title=titleEig, 
