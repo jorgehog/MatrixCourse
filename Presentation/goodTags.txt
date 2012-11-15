@@ -2,5 +2,5 @@ n = 10
 TAG:  474993589329 (shifted better than hessenberg)
 TAG:  963782720036 (hessenberg better than shifted)
 TAG:  985813807064 (std QR fail)
-TAG:  69185430208  (nuclear)
+TAG:  69185430208  (nuclear, 261)
 TAG:  

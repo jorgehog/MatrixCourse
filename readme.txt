@@ -10,9 +10,3 @@ All code is located in the ./code path with the following guidelines:
 	-Comment the headerfile declaration with a short note and the algorithm number in the book.
 
 	See examples "house, givens, hessenberg*" for guidelines.
-
-To get access to the code in netbeans, perform the following steps:
-
-1: Create a new c++ application project (located outside the git repository)
-2: Right click the project and select "add excisting items from folder" and select the "/code" folder.
-3: Include matrixHeaders.h in your main file. E.g.  #include "../../MASTER/MatrixCourse/code/matrixHeaders.h"
