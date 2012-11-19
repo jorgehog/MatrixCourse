@@ -66,7 +66,8 @@
 	\newcommand{\imply}{\quad\Longrightarrow\quad}
 	$
 	
-<section>
+
+	<section>
 		<h1>Unsymmetric Eigensolvers</h1><br>
 		<h3>The Unsymmetric Eigenvalue Problem</h3>
 		<br>
@@ -303,14 +304,14 @@
 			</h3><br>
 		
 			<p>
-				$\mat A \in \mathbb{C}^{n\times n},\quad r \in [1, n], \quad \mat Q_k \in \mathbb{C}^{n\times r}$
+				$\mat A_0 = \mat A \in \mathbb{C}^{n\times n},\quad r \in [1, n], \quad \mat Q_k \in \mathbb{C}^{n\times r}$
 			</p>
 		
 			<p>
 				\begin{eqnarray}
 				& & \mathbf{for}\,k=1,2,...\\
-				& & \qquad \mat Z_k = \mat A\mat Q_{k-1}\\
-				& & \qquad \mat Q_k, \mat R_k = \mathrm{QR}\Big(\mat Z_{k}\Big)\\
+				& & \qquad \mat A_k = \mat A_{k-1}\mat Q_{k-1}\\
+				& & \qquad \mathrm{new}\,\, \mat Q_k \,\,\mathrm{from}\,\, \mathrm{QR}\Big(\mat A_k\Big)\\
 				\end{eqnarray}
 			</p>
 			
@@ -348,20 +349,20 @@
 
 			<p>
 				\begin{eqnarray}
-				& & \mat T_0 = \mat U_0^\dagger \mat A \mat U_0\\
+				& & \mat A_0 = \mat Q_0^\dagger \mat A \mat Q_0\\
 				& & \mathbf{for}\,k=1,2,...\\
-				& & \qquad \mat U_k, \, \mat R_k = \mathrm{QR}\Big(\mat T_{k-1}\Big)\\
-				& & \qquad \mat T_k = \mat R_k\mat U_k \\
+				& & \qquad \mathrm{new}\,\, \mat Q_k, \, \mat R_k \,\,\mathrm{from}\,\, \mathrm{QR}\Big(\mat A_{k-1}\Big)\\
+				& & \qquad \mat A_k = \mat R_k\mat Q_k \\
 				\end{eqnarray}
 			</p>
 		
 			<p class="fragment", align="left"><br>
-				$\mat R_k = \mat U_k^\dagger \mat T_{k-1}$ <br>
-				<span style="color:#FF0000">$\mat T_k$ is similar to $A$</span>.
+				$\mat R_k = \mat Q_k^\dagger \mat A_{k-1}$ <br>
+				<span style="color:#FF0000">$\mat A_k$ is similar to $A$</span>.
 			</p>
 		
 			<p class="fragment", align="left">
-				$\mat T_k$ converges to <span style="color:#0000FF">Schur form</span>.
+				$\mat A_k$ converges to <span style="color:#0000FF">Schur form</span>.
 			</p>
 		
 		</section>
@@ -522,14 +523,14 @@ void householderRedHessenberg(arma::mat & A) {
 		<section>
 			<h3 align="left">Single-Shift QR-step:</h3>
 			<p>
-				$$\mat Q_k, \mat R_k = \mathrm{QR}\Big(\mat A - \mu\mat I\Big)$$
-				$$\mat A = \mat Q_k \mat R_k + \mu\mat I$$</li>
+				$$\mat Q_k, \mat R_k = \mathrm{QR}\Big(\mat A_{k-1} - \mu\mat I\Big)$$
+				$$\mat A_k = \mat R_k\mat Q_k + \mu\mat I$$</li>
 			</p>
 			
 			<h4 align="left">Similarity transformation</h4>
-			<p>
+			<p class="fragment">
 				\begin{eqnarray}
-					\mat A = \mat R\mat U + \mu\mat I &=& \mat Q^T\left(\mat Q\mat R + \mu\mat I\right)\mat Q\\
+					\mat A = \mat R\mat Q + \mu\mat I &=& \mat Q^T\left(\mat Q\mat R + \mu\mat I\right)\mat Q\\
 													  &=& \mat Q^T\left(\mat A - \mu\mat I + \mu\mat I\right)\mat Q\\
 													  &=& \mat Q^T\mat A\mat Q
 				\end{eqnarray}
@@ -613,6 +614,7 @@ void householderRedHessenberg(arma::mat & A) {
 				\begin{eqnarray}
 											  a_2^\ast&=     & a_1 \\
 				                               \mat M &\equiv& (\mat A-a_1\mat I)(\mat A - a_2\mat I) \in \mathbb{R}^{n\times n}\\
+				                               \mat M &=     & \mat Q_1 \mat Q_2 \mat R_2 \mat R_1 \\
 									   \mat Z, \mat R &=     & \mathrm{QR}(\mat M) 					 \\
 											   \mat A &=     & \mat Z^T \mat A \mat Z 				 \\
 				\end{eqnarray}
@@ -686,27 +688,19 @@ void householderRedHessenberg(arma::mat & A) {
 		</section>
 	
 		<section>	
-			<pre><code>void FrancisQRstep(arma::mat & H) {
+			<pre><code class="min">void FrancisQRstep(arma::mat & H) {
 
-    //first col of M
-    s = H(m, m) + H(n, n);
-    t = H(m, m) * H(n, n) - H(m, n) * H(n, m);
-
-    xyz(0) = H(0, 0) * H(0, 0) + H(0, 1) * H(1, 0) - s * H(0, 0) + t;
-    xyz(1) = H(1, 0)*(H(0, 0) + H(1, 1) - s);
-    xyz(2) = H(1, 0) * H(2, 1);
+    //calc first col of M in matrix 'xyz'
 
     //"chasing the bulge"
     for (int k = -1; k < n - 2; k++) {
 
         house(ImBvvT, xyz);
         
-        //q = max(0, k);
         q = k * (int) (k > 0);
 
         H(span(k + 1, k + 3), span(q, n)) = ImBvvT * H(span(k + 1, k + 3), span(q, n));
 
-        //r = min(k+4, n)
         r = (k + 4 - n)*(int) (k + 4 < n) + n;
         
         H(span(0, r), span(k+1, k+3)) = H(span(0, r), span(k+1, k+3))*ImBvvT;
@@ -724,7 +718,6 @@ void householderRedHessenberg(arma::mat & A) {
     house(ImBvvT, xy);
     H(span(n-1, n), span(n-2, n)) = ImBvvT*H(span(n-1, n), span(n-2, n));
     H(span(0,n), span(n-1, n)) = H(span(0,n), span(n-1, n))*ImBvvT;
-
 }</code></pre>
 			
 		</section>
@@ -831,7 +824,7 @@ public:
 			<h3 align="left">Subclasses overriding virtual methods</h3>
 			<pre><code>class FrancisQR : public QR{
 public:
-    FrancisQR(arma::mat & A, double eps = 1E-6, int max_iter = 1000);
+    FrancisQR(arma::mat & A, double eps = 1E-16, int max_iter = 1000);
 protected:
 
     arma::mat subA;
@@ -1023,6 +1016,7 @@ protected:
 	</section>
 	
 
+	</div>
 	<!-- The navigational controls UI -->
 	<aside class="controls">
 		<a class="left" href="#">&#x25C4;</a>

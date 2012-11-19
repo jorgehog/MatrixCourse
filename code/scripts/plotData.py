@@ -7,8 +7,8 @@ n =5;
 eps=0.00001
 nm = 1000
 
-fetchfile = 210393130523
-fetch = False
+fetchfile = 966891295214
+fetch = True
 
 
 programPath = os.path.expanduser("~") + "/NetBeansProjects/matrixCourse/dist/Debug/GNU-Linux-x86"
@@ -101,9 +101,11 @@ plotStyles=["b","r","g", "c"]
 eigPlotStyle = "x"
 
 #Sorting
-armaEig.sort(axis=0)
-for subset in eigvals:
-    subset.sort(axis=0)
+#==============================================================================
+# armaEig.sort(axis=0)
+# for subset in eigvals:
+#     subset.sort(axis=0)
+#==============================================================================
 
 
 titleEig = "Plot of eigenvalues z. Error=%g." % errors[0]
@@ -139,6 +141,7 @@ for i in range(len(methods)):
              hardcopy="../output/" + tag + "CONVERGANCE0.png")
 
 figure(1)
+
 plot(armaEig[:,0], armaEig[:,1], "k*", hold="on", 
      legend="arma::eig_gen()",
 #     axis=axisEig,
